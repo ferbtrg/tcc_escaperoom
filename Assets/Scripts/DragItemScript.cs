@@ -7,11 +7,19 @@ using UnityEngine.EventSystems;
 using static Unity.VisualScripting.Metadata;
 
 public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler {
-
+    #region Fields
     [SerializeField] private Canvas canvas;
-
     private RectTransform   _rectTransform;
     private CanvasGroup     _canvasGroup;
+    public static Vector3          _initialPos;
+    #endregion
+
+    #region Properties
+    public static Vector3 InitialPos
+    {
+        get{ return _initialPos; }
+    }
+    #endregion
 
     private void Awake() 
     {
@@ -19,8 +27,11 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
         _canvasGroup         = GetComponent<CanvasGroup>();
     }
 
+    #region Public Methods
     public void OnBeginDrag( PointerEventData eventData ) 
     {
+        _initialPos = transform.position;
+
         var children = transform.parent.GetComponentsInChildren<Transform>();
         int childrenQty = children.Length - 1;
         // Clone object. Limit to 15.
@@ -57,6 +68,6 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     {
         Debug.Log("OnPointerDown");
     }
-
+    #endregion
 }
 

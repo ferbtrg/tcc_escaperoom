@@ -50,7 +50,9 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
           Debug.LogException(ex);
       }
     }
+    #endregion
 
+    #region Private Methods
     private void DecreaseNumAccordingToCauldron( Transform item )
     {
         //Eu vou precisar do item pra saber qual é o valor que tá dentro da tag - ok

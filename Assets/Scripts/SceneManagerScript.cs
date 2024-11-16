@@ -7,10 +7,10 @@ public class SceneScript : MonoBehaviour
 {
     public void LoadScene(string sceneName)
     {
-        if( string.IsNullOrEmpty(sceneName) )
+        if( string.IsNullOrEmpty( sceneName ) )
             return;
 
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene( sceneName );
         Debug.Log( string.Format( "Scene clicked:{0}", sceneName ) );
     }
 }

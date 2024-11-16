@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MouseUIController : MonoBehaviour 
+public class ZoomUIController : MonoBehaviour 
 {
+    #region Fields
     public float                _normalZoom     = 1f;
     public float                _closeZoom      = 2f;
     public float                _minZoom        = 0.5f;
@@ -19,52 +20,60 @@ public class MouseUIController : MonoBehaviour
     private Vector2             _originalPosition;
     private GraphicRaycaster    _raycaster;
     private EventSystem         _eventSystem;
+    #endregion
 
-    void Start()
+    #region Private Methods
+    private void Start()
     {
-        _canvasScaler    = transform.GetComponent<CanvasScaler>();
-        _raycaster       = transform.GetComponent<GraphicRaycaster>();
-        _eventSystem     = EventSystem.current;
+        _canvasScaler                   = transform.GetComponent<CanvasScaler>();
+        _raycaster                      = transform.GetComponent<GraphicRaycaster>();
+        _eventSystem                    = EventSystem.current;
         
-        _zoom                        = _normalZoom;
-        _canvasScaler.scaleFactor    = _zoom;
+        _zoom                           = _normalZoom;
+        _canvasScaler.scaleFactor       = _zoom;
 
         if( _clock != null )
         {
             RectTransform clockRect     = _clock.GetComponent<RectTransform>();
             _originalPosition            = clockRect.anchoredPosition;
         }
+
+        string str = string.Format( " Start - Zoom: {0}, ScaleFactor: {1}, OrigPos: {2}", _zoom, _canvasScaler.scaleFactor, _originalPosition );
+        Debug.Log( str );
     }
 
-    void Update()
+    private void Update()
     {
         HandleZoom();
     }
 
-    void HandleZoom()
+    private void HandleZoom()
     {
         if( !Input.GetMouseButtonDown(0) )
             return;
 
-        // Verifica se clicou em algum elemento UI
-        PointerEventData pointerData    = new PointerEventData(_eventSystem);
+        //Check if UI element was clicked.
+        PointerEventData pointerData    = new PointerEventData( _eventSystem );
         pointerData.position            = Input.mousePosition;
         
         List<RaycastResult> results = new List<RaycastResult>();
-        _raycaster.Raycast(pointerData, results);
+        _raycaster.Raycast( pointerData, results );
 
         bool clickedUI      = results.Count > 0;
         bool clickedClock   = results.Exists(r => r.gameObject == _clock);
 
-        // Se está com zoom e clicou fora do relógio
-        if( _isZoomedIn && (!clickedUI || (_ignoreUILayerForZoomOut && !clickedClock)) )
+        // Has zoom and clicked outside the clock
+        if( _isZoomedIn && ( !clickedUI || ( _ignoreUILayerForZoomOut && !clickedClock ) ) )
             ZoomOut();
-        // Se não está com zoom e clicou no relógio
+        // No zoom and has clicked on the clock.
         else if (!_isZoomedIn && clickedClock)
             ZoomIn();
+
+        string str = string.Format(" MouseUIController - HandleZoom: ZoomedIn: {0}, ClickedClock: {1} ", _isZoomedIn, clickedClock );
+        Debug.Log( str );
     }
 
-    void ZoomIn()
+    private void ZoomIn()
     {
         _isZoomedIn     = true;
         _zoom           = _closeZoom;
@@ -79,9 +88,11 @@ public class MouseUIController : MonoBehaviour
         }
         
         ApplyZoom();
+        string str = string.Format(" ZoomIn - OrigPos: {0}, Zoom:{1}", _originalPosition, _zoom );
+        Debug.Log( str );
     }
 
-    void ZoomOut()
+    private void ZoomOut()
     {
         _isZoomedIn             = false;
         _zoom                   = _normalZoom;
@@ -93,11 +104,18 @@ public class MouseUIController : MonoBehaviour
         }
         
         ApplyZoom();
+
+        string str = string.Format(" ZoomOut - OrigPos: {0}, Zoom:{1}", _originalPosition, _zoom );
+        Debug.Log(str);
     }
 
-    void ApplyZoom()
+    private void ApplyZoom()
     {
         _zoom                       = Mathf.Clamp(_zoom, _minZoom, _maxZoom);
         _canvasScaler.scaleFactor   = _zoom;
+
+        string str = string.Format(" ApplyZoom - ScaleFactor: {0}, Zoom:{1}", _canvasScaler.scaleFactor, _zoom );
+        Debug.Log(str);
     }
+    #endregion
 }

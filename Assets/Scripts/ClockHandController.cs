@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class HourScript : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class ClockHandController : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     #region Fields
     [SerializeField] private float _rotationSpeed       = 1.5f;
@@ -11,20 +11,20 @@ public class HourScript : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     private RectTransform   _rectTransform;
     private Camera          _canvasCamera;
     private float           _lastAngle;
-    private Canvas _parentCanvas;
+    private Canvas          _parentCanvas;
     #endregion
 
     #region Private Methods
     private void Awake()
     {
-       _rectTransform = GetComponent<RectTransform>();
-        _parentCanvas = GetComponentInParent<Canvas>();
-        _canvasCamera = _parentCanvas.worldCamera;
+        _rectTransform  = GetComponent<RectTransform>();
+        _parentCanvas   = GetComponentInParent<Canvas>();
+        _canvasCamera   = _parentCanvas.worldCamera;
     }
     #endregion
 
     #region Public Methods
-      public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
         _isDragging                 = true;
       // Converte a posição do mouse considerando o zoom do canvas
@@ -67,7 +67,6 @@ public class HourScript : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoi
     }
     private Vector2 GetCanvasSpacePosition(Vector3 worldPosition)
     {
-        // Considera o zoom do canvas ao converter a posição
         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint( _canvasCamera, worldPosition );
         return screenPoint;
     }

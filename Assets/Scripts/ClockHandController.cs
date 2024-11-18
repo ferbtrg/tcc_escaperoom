@@ -6,20 +6,22 @@ using UnityEngine.EventSystems;
 public class ClockHandController : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     #region Fields
-    [SerializeField] private float _rotationSpeed       = 1.5f;
-    private bool            _isDragging                 = false;
-    private RectTransform   _rectTransform;
-    private Camera          _canvasCamera;
-    private float           _lastAngle;
-    private Canvas          _parentCanvas;
+    [SerializeField] private float      _rotationSpeed          = 1.5f;
+    private bool                        _isDragging             = false;
+    private RectTransform               _rectTransform;
+    private Camera                      _canvasCamera;
+    private float                       _lastAngle;
+    private Canvas                      _parentCanvas;
+    private ClockMultiplierChecker      _multiplierChecker;
     #endregion
 
     #region Private Methods
     private void Awake()
     {
-        _rectTransform  = GetComponent<RectTransform>();
-        _parentCanvas   = GetComponentInParent<Canvas>();
-        _canvasCamera   = _parentCanvas.worldCamera;
+        _rectTransform          = GetComponent<RectTransform>();
+        _parentCanvas           = GetComponentInParent<Canvas>();
+        _canvasCamera           = _parentCanvas.worldCamera;
+        _multiplierChecker      = GameObject.Find("Clock").GetComponent<ClockMultiplierChecker>();
     }
     #endregion
 
@@ -59,6 +61,13 @@ public class ClockHandController : MonoBehaviour, IPointerDownHandler, IDragHand
 
         //Store the current angle for the next frame's calculation
         _lastAngle                      = currentAngle;
+
+        if( _multiplierChecker.CheckValidPosition() )
+        {
+            Debug.Log("Encontrou uma multiplicação válida!");
+            // Aqui você pode adicionar seu código de sucesso
+            // Por exemplo: tocar um som, mostrar partículas, etc.
+        }
     }
 
     public void OnPointerUp( PointerEventData eventData )

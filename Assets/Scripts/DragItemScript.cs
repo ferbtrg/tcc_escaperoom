@@ -23,8 +23,8 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
     private void Awake() 
     {
-        _rectTransform      = GetComponent<RectTransform>();
-        _canvasGroup         = GetComponent<CanvasGroup>();
+        _rectTransform          = GetComponent<RectTransform>();
+        _canvasGroup            = GetComponent<CanvasGroup>();
     }
 
     #region Public Methods
@@ -32,12 +32,14 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     {
         _initialPos = transform.position;
 
+        // Obtém todos os Children do objeto pai
         var children = transform.parent.GetComponentsInChildren<Transform>();
-        int childrenQty = children.Length - 1;
-        // Clone object. Limit to 15.
-        if( childrenQty  < 15 )
-        { 
+        
+        // Verifica se o objeto atual (this) não tem outros filhos
+        if( transform.childCount == 0 && transform.parent.childCount < 15 )
+        {
             GameObject newFlower            = Instantiate(gameObject, transform.position, transform.rotation, transform.parent);
+            newFlower.name                  = gameObject.name; 
             newFlower.transform.localScale  = transform.localScale;
         }
 
@@ -57,7 +59,7 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
     public void OnEndDrag( PointerEventData eventData )
     {
-        _canvasGroup.alpha           = 1f;
+        //_canvasGroup.alpha           = 1f;
         _canvasGroup.blocksRaycasts  = true;
 
         string str = string.Format( "OnEndDrag - Alpha: {0}, blockRayCasts: {1}", _canvasGroup.alpha, _canvasGroup.blocksRaycasts.ToString() );

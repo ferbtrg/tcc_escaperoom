@@ -11,6 +11,12 @@ public class DropItemScript : MonoBehaviour, IDropHandler
     static int _firstPot   = 0;
     static int _secPot     = 0;
     static int _thirdPot   = 0;
+
+    static GameObject _thirdPotPrefab;
+    static GameObject _secPotPrefab;
+
+    [SerializeField] private GameObject _flowerGroup;
+
     #endregion
 
     #region Public Methods
@@ -23,13 +29,16 @@ public class DropItemScript : MonoBehaviour, IDropHandler
       try
       {
           Debug.Log("OnDrop");
-          if( eventData.pointerDrag != null )
-              eventData.pointerDrag.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
-           
-          //var alpha = eventData.pointerDrag.GetComponent<CanvasGroup>().alpha = 0;
-          //string str = string.Format( "OnDrop - Alpha: {0}", alpha );
-          //Debug.Log( str );
+          if( eventData.pointerDrag == null )
+                return;
 
+              //eventData.pointerDrag.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
+           
+          var alpha = eventData.pointerDrag.GetComponent<CanvasGroup>().alpha = 0;
+          string str = string.Format( "OnDrop - Alpha: {0}", alpha );
+          Debug.Log( str );
+
+          AddFlowersToPot( eventData );
           ChangePotNumber();
       }//try
       catch( Exception ex )
@@ -41,6 +50,96 @@ public class DropItemScript : MonoBehaviour, IDropHandler
     #endregion
 
     #region Private Methods
+    private void AddFlowersToPot( PointerEventData eventData )
+    {
+         // Instancia o grupo de flores
+        GameObject      flower          = eventData.pointerDrag;
+        GameObject      newFlowerGroup  = null;
+        string          potName         = transform.name;
+        bool isClone                    = false;
+        // Pega o componente FlowerGroup para gerenciar a visibilidade
+        FlowerGroupController flowerGroup;
+        switch( potName )
+        {
+            case "PotOne":
+                flowerGroup = _flowerGroup.GetComponent<FlowerGroupController>();
+
+                break;
+
+            case "PotSec":
+                if( _secPotPrefab == null )
+                {
+                    newFlowerGroup          = Instantiate( _flowerGroup );
+                    newFlowerGroup.name     = _flowerGroup.name;
+                    _secPotPrefab           = newFlowerGroup;
+
+                    GetPotsPosition(_secPotPrefab, eventData);
+                    flowerGroup = newFlowerGroup.GetComponent<FlowerGroupController>();
+                    flowerGroup.SetFlowerVisibility();
+                    isClone                 = true;
+                }
+                else
+                { 
+                    newFlowerGroup          = _secPotPrefab;
+                    flowerGroup = newFlowerGroup.GetComponent<FlowerGroupController>();
+                }
+                break;    
+
+            case "PotThird":
+                if( _thirdPotPrefab == null )
+                {
+                    newFlowerGroup  = Instantiate( _flowerGroup );
+                    newFlowerGroup.name     = _flowerGroup.name;
+                   _thirdPotPrefab  = newFlowerGroup;
+
+                    GetPotsPosition( _thirdPotPrefab, eventData );
+                    flowerGroup = newFlowerGroup.GetComponent<FlowerGroupController>();
+                    flowerGroup.SetFlowerVisibility();
+                    isClone         = true;
+
+                }
+                else
+                { 
+                    newFlowerGroup = _thirdPotPrefab;
+                    flowerGroup = newFlowerGroup.GetComponent<FlowerGroupController>();
+                }
+
+                break;
+
+                default:
+                    newFlowerGroup       = Instantiate( _flowerGroup );
+                    flowerGroup          = newFlowerGroup.GetComponent<FlowerGroupController>();
+                break;
+        }
+
+        flowerGroup.isClone                     = isClone;
+        // Identifica a cor da flor que foi dropada
+        string flowerName                       = eventData.pointerDrag.name;
+        string flowerColor                      = "";
+        switch( flowerName )
+        {
+            case "BlueFlower":
+                flowerColor = "blue";
+                break;
+
+            case "PinkFlower":
+                flowerColor = "pink";
+                break;
+
+            case "PurpleFlower":
+                 flowerColor = "purple";
+                break;
+
+            case "YellowFlower":
+                flowerColor = "yellow";
+            break;
+
+        }
+
+        // Mostra a flor correspondente no grupo
+        flowerGroup.ShowFlower(flowerColor);
+    }
+
     private void ChangePotNumber()
     {
         Transform childTest = transform.GetChild(0);
@@ -88,6 +187,24 @@ public class DropItemScript : MonoBehaviour, IDropHandler
         }
     }
 
+    private void GetPotsPosition( GameObject newFlowerGroup, PointerEventData eventData )
+    {
+        var parent                  = eventData.pointerDrag.transform.parent;
+        var newFlowerGroupRect      = newFlowerGroup.GetComponent<RectTransform>();
+        var vasoRect                = GetComponent<RectTransform>();
+        newFlowerGroupRect.SetParent(parent, false);
+
+        // Pega o vaso original e calcula o offset
+        Vector2 firstPotPos     = new Vector2(-300f, -128f);    // Posição do vaso 1
+        Vector2 newPotPos       = vasoRect.anchoredPosition;    // Posição do vaso onde dropou
+
+        // Calcula a diferença entre as posições dos vasos
+        Vector2 DifBetweenPots                          = newPotPos - firstPotPos;
+        
+        // Aplica essa diferença ao grupo de flores
+        newFlowerGroupRect.anchoredPosition             += DifBetweenPots;
+    }
+
     private void CheckPotNumbers()
     {
         int result              = 12;
@@ -107,7 +224,7 @@ public class DropItemScript : MonoBehaviour, IDropHandler
                 if( child == null )
                     return;
 
-                var sprite = Resources.Load<Sprite>( "Props/" + "Vaso_Cheio");
+                var sprite = Resources.Load<Sprite>( "Props/Vasos/vaso_cheio_45" );
                 if( sprite == null )
                     return;
 

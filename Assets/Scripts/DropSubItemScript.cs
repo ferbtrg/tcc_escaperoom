@@ -35,7 +35,7 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
             return;
 
         //Path to cauldron's img
-        var sprite      = Resources.Load<Sprite>( "Props/" + "Meio" );
+        var sprite      = Resources.Load<Sprite>( "Props/Caldeirao/caldeirao_meio" );
         if( sprite == null )
             return;
 

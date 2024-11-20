@@ -31,19 +31,6 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     public void OnBeginDrag( PointerEventData eventData ) 
     {
         _initialPos = transform.position;
-
-        // Obtém todos os Children do objeto pai
-        var children = transform.parent.GetComponentsInChildren<Transform>();
-        
-        // Verifica se o objeto atual (this) não tem outros filhos
-        if( transform.childCount == 0 && transform.parent.childCount < 15 )
-        {
-            GameObject newFlower            = Instantiate(gameObject, transform.position, transform.rotation, transform.parent);
-            newFlower.name                  = gameObject.name; 
-            newFlower.transform.localScale  = transform.localScale;
-        }
-
-        _canvasGroup.alpha           = .6f;
         _canvasGroup.blocksRaycasts  = false;
 
         string str = string.Format( "OnBeginDrag - Alpha: {0}, blockRayCasts: {1}", _canvasGroup.alpha, _canvasGroup.blocksRaycasts.ToString() );
@@ -59,7 +46,9 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
     public void OnEndDrag( PointerEventData eventData )
     {
-        //_canvasGroup.alpha           = 1f;
+         if( _canvasGroup.alpha == 0 && transform.position == _initialPos  )
+            _canvasGroup.alpha           = 1f;
+
         _canvasGroup.blocksRaycasts  = true;
 
         string str = string.Format( "OnEndDrag - Alpha: {0}, blockRayCasts: {1}", _canvasGroup.alpha, _canvasGroup.blocksRaycasts.ToString() );

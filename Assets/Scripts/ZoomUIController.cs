@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
 public class ZoomUIController : MonoBehaviour 
 {
     #region Fields
@@ -20,6 +18,8 @@ public class ZoomUIController : MonoBehaviour
     private Vector2             _originalPosition;
     private GraphicRaycaster    _raycaster;
     private EventSystem         _eventSystem;
+    public Camera mainCamera; // Adicione essa referência
+    private Vector3 originalCameraPosition;
     #endregion
 
     #region Private Methods
@@ -37,6 +37,8 @@ public class ZoomUIController : MonoBehaviour
             RectTransform clockRect     = _clock.GetComponent<RectTransform>();
             _originalPosition            = clockRect.anchoredPosition;
         }
+
+         originalCameraPosition = mainCamera.transform.position;
 
         string str = string.Format( " Start - Zoom: {0}, ScaleFactor: {1}, OrigPos: {2}", _zoom, _canvasScaler.scaleFactor, _originalPosition );
         Debug.Log( str );
@@ -85,6 +87,14 @@ public class ZoomUIController : MonoBehaviour
             _originalPosition               = clockRect.anchoredPosition;
             // Centraliza o painel
             clockRect.anchoredPosition      = Vector2.zero;
+
+                     // Adicione isso: move a câmera para a posição do _clock
+            Vector3 clockPosition = _clock.transform.position;
+            mainCamera.transform.position = new Vector3(
+                clockPosition.x,
+                clockPosition.y,
+                mainCamera.transform.position.z // mantém o Z original
+            );
         }
         
         ApplyZoom();
@@ -101,6 +111,9 @@ public class ZoomUIController : MonoBehaviour
         {
             RectTransform panelRect         = _clock.GetComponent<RectTransform>();
             panelRect.anchoredPosition      = _originalPosition;
+
+               // Retorna a câmera para posição original
+            mainCamera.transform.position = originalCameraPosition;
         }
         
         ApplyZoom();

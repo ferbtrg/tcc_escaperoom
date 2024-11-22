@@ -88,8 +88,8 @@ public class ItemZoomController : MonoBehaviour
         
         RectTransform rectTransform                 = GetComponent<RectTransform>();
         _originalPosition                           = rectTransform.anchoredPosition;
-        rectTransform.anchoredPosition              = Vector2.zero;
-        rectTransform.localScale                    = _originalScale * _itemZoomScale;
+        rectTransform.anchoredPosition          = Vector2.zero;
+        rectTransform.localScale = _originalScale * _itemZoomScale;
                 
         // Esconde outros elementos UI
         foreach (var graphic in _parentCanvas.GetComponentsInChildren<Graphic>())

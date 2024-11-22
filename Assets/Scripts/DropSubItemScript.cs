@@ -30,20 +30,7 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
         if( item == null )
             return;
 
-        var child = item.GetComponentInChildren<Image>();
-        if( child == null )
-            return;
-
-        //Path to cauldron's img
-        var sprite      = Resources.Load<Sprite>( "Props/Caldeirao/caldeirao_meio" );
-        if( sprite == null )
-            return;
-
         DecreaseNumAccordingToCauldron( item );
-
-        //No need to change the image if it's the same.
-        if( child.sprite != sprite )
-            child.sprite    = sprite;
       }//try
       catch( Exception ex )
       {

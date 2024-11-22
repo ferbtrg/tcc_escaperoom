@@ -9,7 +9,7 @@ public class ZoomUIController : MonoBehaviour
     public float                _closeZoom      = 2f;
     public float                _minZoom        = 0.5f;
     public float                _maxZoom        = 3f;
-    public GameObject           _clock;
+    public GameObject           item;
     public bool                 _ignoreUILayerForZoomOut = true;
 
     private float               _zoom;
@@ -18,8 +18,7 @@ public class ZoomUIController : MonoBehaviour
     private Vector2             _originalPosition;
     private GraphicRaycaster    _raycaster;
     private EventSystem         _eventSystem;
-    public Camera mainCamera; // Adicione essa referência
-    private Vector3 originalCameraPosition;
+    public FloatingBooksManager _floatingBooks;
     #endregion
 
     #region Private Methods
@@ -32,13 +31,13 @@ public class ZoomUIController : MonoBehaviour
         _zoom                           = _normalZoom;
         _canvasScaler.scaleFactor       = _zoom;
 
-        if( _clock != null )
+        if( item != null )
         {
-            RectTransform clockRect     = _clock.GetComponent<RectTransform>();
+            RectTransform clockRect     = item.GetComponent<RectTransform>();
             _originalPosition            = clockRect.anchoredPosition;
         }
 
-         originalCameraPosition = mainCamera.transform.position;
+        _floatingBooks = FindObjectOfType<FloatingBooksManager>();
 
         string str = string.Format( " Start - Zoom: {0}, ScaleFactor: {1}, OrigPos: {2}", _zoom, _canvasScaler.scaleFactor, _originalPosition );
         Debug.Log( str );
@@ -62,7 +61,7 @@ public class ZoomUIController : MonoBehaviour
         _raycaster.Raycast( pointerData, results );
 
         bool clickedUI      = results.Count > 0;
-        bool clickedClock   = results.Exists(r => r.gameObject == _clock);
+        bool clickedClock   = results.Exists(r => r.gameObject == item);
 
         // Has zoom and clicked outside the clock
         if( _isZoomedIn && ( !clickedUI || ( _ignoreUILayerForZoomOut && !clickedClock ) ) )
@@ -80,22 +79,19 @@ public class ZoomUIController : MonoBehaviour
         _isZoomedIn     = true;
         _zoom           = _closeZoom;
         
-        if( _clock != null )
+        if( item != null )
         {
-            RectTransform clockRect         = _clock.GetComponent<RectTransform>();
+            RectTransform clockRect         = item.GetComponent<RectTransform>();
             // Salva a posição atual antes de centralizar
             _originalPosition               = clockRect.anchoredPosition;
             // Centraliza o painel
             clockRect.anchoredPosition      = Vector2.zero;
-
-                     // Adicione isso: move a câmera para a posição do _clock
-            Vector3 clockPosition = _clock.transform.position;
-            mainCamera.transform.position = new Vector3(
-                clockPosition.x,
-                clockPosition.y,
-                mainCamera.transform.position.z // mantém o Z original
-            );
         }
+                
+        // Esconde os livros flutuantes
+        if( _floatingBooks != null)
+            _floatingBooks.OnZoomIn();
+
         
         ApplyZoom();
         string str = string.Format(" ZoomIn - OrigPos: {0}, Zoom:{1}", _originalPosition, _zoom );
@@ -107,14 +103,15 @@ public class ZoomUIController : MonoBehaviour
         _isZoomedIn             = false;
         _zoom                   = _normalZoom;
         
-        if( _clock != null )
+        if( item != null )
         {
-            RectTransform panelRect         = _clock.GetComponent<RectTransform>();
+            RectTransform panelRect         = item.GetComponent<RectTransform>();
             panelRect.anchoredPosition      = _originalPosition;
-
-               // Retorna a câmera para posição original
-            mainCamera.transform.position = originalCameraPosition;
         }
+        
+        // Restaura os livros flutuantes
+        if( _floatingBooks != null) 
+            _floatingBooks.OnZoomOut();
         
         ApplyZoom();
 

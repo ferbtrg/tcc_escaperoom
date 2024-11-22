@@ -93,12 +93,12 @@ public class CauldronNumberAnimation : MonoBehaviour
             });
     }
 
-    private void UpdateNumbers(int number)
+    private void UpdateNumbers( int number )
     {
         int firstDig    = number / 10;
         int secDig      = number % 10;
         
-        if (number < 10)
+        if( number < 10 )
             firstDig = 0;
 
         // Carregar e atualizar sprites

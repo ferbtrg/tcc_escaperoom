@@ -1000,11 +1000,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc7ea5ce3ec4dfc4fb3cef0e595a8189, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  potionSplashEffect: {fileID: 1075549434}
-  magicEffect: {fileID: 1866860859}
-  floatingNumberPrefab: {fileID: 8742151143187469505, guid: 0d9af137f9073184a859ad536c170f00, type: 3}
-  floatDistance: 50
-  floatDuration: 1.5
+  _potionSplashEffect: {fileID: 0}
+  _magicEffect: {fileID: 0}
+  _floatingNumberPrefab: {fileID: 8742151143187469505, guid: 0d9af137f9073184a859ad536c170f00, type: 3}
+  _floatDistance: 100
+  _floatDuration: 1
 --- !u!1 &908079387
 GameObject:
   m_ObjectHideFlags: 0

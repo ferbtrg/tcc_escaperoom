@@ -11,6 +11,7 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
 {
     #region Fields
     static string _lastNum = "";
+     public CauldronNumberAnimation numberAnimation;
     #endregion
     #region Public Methods
     /// <summary>
@@ -80,6 +81,10 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
             else
                 cauldronTag = int.Parse( _lastNum );
     
+            var animation = GetComponent<CauldronNumberAnimation>();
+            if( animation != null )
+                animation.OnPotionAdded(cauldronTag, number);
+
             var newNumber       = cauldronTag - number;
             _lastNum            = newNumber.ToString();
 

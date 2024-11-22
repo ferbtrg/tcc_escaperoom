@@ -27,9 +27,16 @@ public class DropItemScript : MonoBehaviour, IDropHandler
     {
       try
       {
-          Debug.Log("OnDrop");
+
           if( eventData.pointerDrag == null )
                 return;
+
+          if( transform.name == "PotResult" )
+          {
+              eventData.pointerDrag.GetComponent<RectTransform>().position = DragItemScript.InitialPos;
+              return;
+          }
+               
            
         var item        = eventData.pointerDrag;
         var parent      = item.transform.parent;
@@ -42,6 +49,7 @@ public class DropItemScript : MonoBehaviour, IDropHandler
         {
             GameObject newFlower                            = Instantiate( gameObj, DragItemScript.InitialPos, item.transform.rotation, parent );
             newFlower.transform.localScale                  = item.transform.localScale;
+            newFlower.name                                  = item.transform.name;
             newFlower.GetComponent<CanvasGroup>().blocksRaycasts  = true;
             newFlower.GetComponent<CanvasGroup>().alpha = 1;
         }
@@ -51,6 +59,7 @@ public class DropItemScript : MonoBehaviour, IDropHandler
 
           AddFlowersToPot( eventData );
           ChangePotNumber();
+
       }//try
       catch( Exception ex )
       {
@@ -205,7 +214,7 @@ public class DropItemScript : MonoBehaviour, IDropHandler
         newFlowerGroupRect.SetParent(parent, false);
 
         // Pega o vaso original e calcula o offset
-        Vector2 firstPotPos     = new Vector2(-300f, -128f);    // Posição do vaso 1
+        Vector2 firstPotPos     = new Vector2(-300f, -150f);    // Posição do vaso 1
         Vector2 newPotPos       = vasoRect.anchoredPosition;    // Posição do vaso onde dropou
 
         // Calcula a diferença entre as posições dos vasos

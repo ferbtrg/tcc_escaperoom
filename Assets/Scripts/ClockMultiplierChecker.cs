@@ -6,9 +6,12 @@ using UnityEngine.EventSystems;
 public class ClockMultiplierChecker : MonoBehaviour
 {
     #region Fields
-    [SerializeField] private RectTransform      _hourHand;
-    [SerializeField] private RectTransform      _minuteHand;
-    [SerializeField] private float              _angleErrorMargin = 5f;
+    [SerializeField] 
+    private RectTransform      _hourHand;
+    [SerializeField] 
+    private RectTransform      _minuteHand;
+    [SerializeField] 
+    private float              _angleErrorMargin = 5f;
     #endregion
 
     #region Private Methods
@@ -19,19 +22,18 @@ public class ClockMultiplierChecker : MonoBehaviour
     /// <returns></returns>
     private int GetHourFromAngle( float angle )
     {
-        // Normalizes the angle to 0-360
+        //Normalizes the angle to 0-360
         angle                   = ( angle + 360f ) % 360f;
         
-        // In Unity UI, 0 is right and rotates counterclockwise
-        // We need to transform to the clock system where 0 is at the top
-        // Rotating counterclockwise
-         float clockAngle   = ( 450f - angle ) % 360f;
+        //In Unity, 0 is in the right and rotates counterclockwise
+        //We need to transform to the clock system where 0 is at the top
+         float clockAngle       = ( 450f - angle ) % 360f;
         
-        // Converts to hour (1-12)
+        //Converts to hour (1-12)
         float number            = ( clockAngle / 30f ); // 30 degrees per hour
         int roundedNumber       = Mathf.RoundToInt( number );
         
-        // Adjusts to scale 1-12
+        //Adjusts to scale 1-12
         if( roundedNumber == 0 || roundedNumber > 12 )
             roundedNumber = 12;
             
@@ -45,17 +47,17 @@ public class ClockMultiplierChecker : MonoBehaviour
     /// <returns></returns>
     private int GetMinuteFromAngle( float angle )
     {
-        // Normalizes the angle to 0-360
+        //Normalizes the angle to 0-360
         angle               = ( angle + 360f ) % 360f;
         
-        // Rotating counterclockwise
+        //Rotating counterclockwise
          float clockAngle   = ( 360f - angle ) % 360f;
         
-        // Converts to minutes (0-60)
-        float number        = ( clockAngle / 6f ); // 6 degrees per minute
-        int minutes         = Mathf.RoundToInt( number );
+        //Converts to minutes (0-60)
+        float   number        = ( clockAngle / 6f ); // 6 degrees per minute
+        int     minutes         = Mathf.RoundToInt( number );
         
-        // Adjusts to scale 0-60
+        //Adjusts to scale 0-60
         if( minutes == 0 || minutes == 60 )
             minutes = 60;
             
@@ -85,7 +87,7 @@ public class ClockMultiplierChecker : MonoBehaviour
     {
         int hourNumber          = GetHourFromAngle( _hourHand.localEulerAngles.z );
         int minuteNumber        = GetMinuteFromAngle( _minuteHand.localEulerAngles.z );
-        // List of all valid combinations for 36
+        //List of all valid combinations for 36
         var validCombinations = new List<( int hour, int minute )>
         {
             (1, 36),
@@ -95,6 +97,7 @@ public class ClockMultiplierChecker : MonoBehaviour
             (6, 6)
         };
         string str = string.Format( "Valid combination found: {0} x {1}", hourNumber, minuteNumber );
+
         // Checks if current position matches any valid combination
         foreach( var combo in validCombinations )
         {

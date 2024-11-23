@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+
+/// <summary>
+/// Class to check if clock hand is in the right place. We are using angles here to check the numbers.
+/// Here we are checking if hour hand and min hand is equal to 36.
+/// </summary>
 public class ClockHandController : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     #region Fields
@@ -63,17 +68,16 @@ public class ClockHandController : MonoBehaviour, IPointerDownHandler, IDragHand
         _lastAngle                      = currentAngle;
 
         if( _multiplierChecker.CheckValidPosition() )
-        {
             Debug.Log("Encontrou uma multiplicação válida!");
-            // Aqui você pode adicionar seu código de sucesso
-            // Por exemplo: tocar um som, mostrar partículas, etc.
-        }
     }
 
     public void OnPointerUp( PointerEventData eventData )
     {
         _isDragging = false;
     }
+    #endregion
+
+    #region Private Methods
     private Vector2 GetCanvasSpacePosition(Vector3 worldPosition)
     {
         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint( _canvasCamera, worldPosition );

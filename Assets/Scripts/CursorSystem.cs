@@ -1,79 +1,94 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Deals with cursor and circle animation.
+/// </summary>
 public class CursorSystem : MonoBehaviour
 {
+    #region Fields
     [Header("Cursor Settings")]
-    [SerializeField] private Texture2D cursorTexture;
-    [SerializeField] private Vector2 hotSpot = new Vector2(16, 16);
-    [SerializeField] private CursorMode cursorMode = CursorMode.Auto;
+    [SerializeField] 
+    private Texture2D   _cursorTexture;
+    [SerializeField]
+    private Vector2     _hotSpot    = new Vector2(16, 16);
+    [SerializeField] 
+    private CursorMode  _cursorMode = CursorMode.Auto;
 
     [Header("Click Effect Settings")]
-    [SerializeField] private GameObject circleEffectPrefab;
-    [SerializeField] private float animationDuration = 0.3f;
-    [SerializeField] private float startScale = 0.1f;
-    [SerializeField] private float endScale = 2f;
-    [SerializeField] private Color startColor = new Color(1f, 1f, 1f, 0.5f);
-    [SerializeField] private Color endColor = new Color(1f, 1f, 1f, 0f);
-    [SerializeField] private float zOffset = 0f; // Para controlar a profundidade do efeito
+    [SerializeField] 
+    private GameObject  _circleEffectPrefab;
+    [SerializeField] 
+    private float       _animationDuration  = 0.3f;
+    [SerializeField] 
+    private float       _startScale         = 0.1f;
+    [SerializeField] 
+    private float       _endScale           = 2f;
+    [SerializeField] 
+    private Color       _startColor         = new Color(1f, 1f, 1f, 0.5f);
+    [SerializeField] 
+    private Color       _endColor           = new Color(1f, 1f, 1f, 0f);
+    [SerializeField] 
+    private float       _zOffset            = 0f;
 
+    #endregion
+
+    #region Private Methods
     private void Start()
     {
-        // Configura o cursor
-        if (cursorTexture != null)
-        {
-            Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
-        }
+        //Set cursor.
+        if( _cursorTexture != null )
+            Cursor.SetCursor( _cursorTexture, _hotSpot, _cursorMode );
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
+        if( Input.GetMouseButtonDown(0) )
             CreateClickEffect();
-        }
     }
 
     private void CreateClickEffect()
     {
-        // Converte a posição do mouse para posição no mundo
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = zOffset; // Define a profundidade do efeito
+        //Convert mouse position to world position
+        Vector3 mousePos    = Camera.main.ScreenToWorldPoint( Input.mousePosition );
+        //Sets the depth of the effect
+        mousePos.z          = _zOffset; 
 
-        // Cria o efeito
-        GameObject effect = Instantiate(circleEffectPrefab, mousePos, Quaternion.identity);
-        SpriteRenderer spriteRenderer = effect.GetComponent<SpriteRenderer>();
+        GameObject effect               = Instantiate( _circleEffectPrefab, mousePos, Quaternion.identity );
+        SpriteRenderer spriteRenderer   = effect.GetComponent<SpriteRenderer>();
         
-        if (spriteRenderer != null)
+        if( spriteRenderer != null )
         {
-            spriteRenderer.color = startColor;
-            effect.transform.localScale = Vector3.one * startScale;
-            StartCoroutine(AnimateCircle(effect, spriteRenderer));
+            spriteRenderer.color            = _startColor;
+            effect.transform.localScale     = Vector3.one * _startScale;
+            StartCoroutine( AnimateCircle( effect, spriteRenderer ) );
         }
     }
 
     private IEnumerator AnimateCircle(GameObject circle, SpriteRenderer renderer)
     {
-        float elapsed = 0f;
-
-        while (elapsed < animationDuration)
+        float elapsed                       = 0f;
+        while( elapsed < _animationDuration )
         {
-            float t = elapsed / animationDuration;
+            float t                         = elapsed / _animationDuration;
             
-            // Usa uma curva suave para a animação
-            float smoothT = Mathf.Sin(t * Mathf.PI * 0.5f);
+            //Use a smooth curve for animation
+            float smoothT                   = Mathf.Sin(t * Mathf.PI * 0.5f);
             
-            // Anima o tamanho
-            float currentScale = Mathf.Lerp(startScale, endScale, smoothT);
-            circle.transform.localScale = Vector3.one * currentScale;
+            //Animate the size
+            float currentScale              = Mathf.Lerp(_startScale, _endScale, smoothT);
+            circle.transform.localScale     = Vector3.one * currentScale;
             
-            // Anima a cor/transparência
-            renderer.color = Color.Lerp(startColor, endColor, smoothT);
-            
-            elapsed += Time.deltaTime;
+            //Animates color
+            renderer.color                  = Color.Lerp(_startColor, _endColor, smoothT);
+            elapsed                         += Time.deltaTime;
+
+            //yield so we don't block the main thread.
             yield return null;
         }
 
+        //Destroys the circle so that there is no fixed instance left on the screen.
         Destroy(circle);
     }
+    #endregion
 }

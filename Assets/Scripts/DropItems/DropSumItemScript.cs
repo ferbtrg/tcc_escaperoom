@@ -44,7 +44,7 @@ public class DropItemScript : MonoBehaviour, IDropHandler
         var children    = parent.GetComponentsInChildren<Transform>();
         var gameObj     = item.gameObject;
 
-        // Verifica se o objeto atual (this) não tem outros filhos
+
         if( item.transform.childCount == 0 && parent.childCount < 15 )
         {
             GameObject newFlower                            = Instantiate( gameObj, DragItemScript.InitialPos, item.transform.rotation, parent );
@@ -53,9 +53,6 @@ public class DropItemScript : MonoBehaviour, IDropHandler
             newFlower.GetComponent<CanvasGroup>().blocksRaycasts  = true;
             newFlower.GetComponent<CanvasGroup>().alpha = 1;
         }
-
-          //string str        = string.Format( "OnDrop - Alpha: {0}", alpha );
-          //Debug.Log( str );
 
           AddFlowersToPot( eventData );
           ChangePotNumber();

@@ -5695,6 +5695,60 @@ MonoBehaviour:
   amplitude: 0.5
   frequency: 1
   rotationAmount: 5
+--- !u!1 &534059464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 534059466}
+  - component: {fileID: 534059465}
+  m_Layer: 0
+  m_Name: Cursor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &534059465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534059464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3874460f7acaf77479b1f32bbda87dd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cursorTexture: {fileID: 2800000, guid: 45877299b6131b74a91608ecaad08d2c, type: 3}
+  hotSpot: {x: 0, y: 0}
+  cursorMode: 0
+  circleEffectPrefab: {fileID: 7611819461966123555, guid: 097d14e979caa3041bf14fabd973d65f, type: 3}
+  animationDuration: 0.3
+  startScale: 0.5
+  endScale: 4
+  startColor: {r: 1, g: 1, b: 1, a: 0.21176471}
+  endColor: {r: 1, g: 1, b: 1, a: 0.08627451}
+  zOffset: 0
+--- !u!4 &534059466
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534059464}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.6593627, y: 0.4913203, z: 0.2219754}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &676118325
 GameObject:
   m_ObjectHideFlags: 0
@@ -6001,6 +6055,7 @@ GameObject:
   - component: {fileID: 971039955}
   - component: {fileID: 971039959}
   - component: {fileID: 971039960}
+  - component: {fileID: 971039961}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -6116,6 +6171,18 @@ MonoBehaviour:
   item: {fileID: 205432051}
   _ignoreUILayerForZoomOut: 1
   _floatingBooks: {fileID: 0}
+--- !u!114 &971039961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971039954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f801eab0fe1634f4ca7bab89594445f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1053647938
 GameObject:
   m_ObjectHideFlags: 0
@@ -21170,7 +21237,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 971039961}
         m_TargetAssemblyTypeName: SceneScript, Assembly-CSharp
         m_MethodName: LoadScene
         m_Mode: 5
@@ -26678,3 +26745,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 288949937}
   - {fileID: 971039958}
+  - {fileID: 534059466}

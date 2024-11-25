@@ -5,8 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.Video;
-
+using static Unity.VisualScripting.Metadata;
 public class DropSubItemScript : MonoBehaviour, IDropHandler
 {
     #region Fields
@@ -51,6 +50,13 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
     {
         if( item == null ) 
             return;
+
+       var potion = item.GetComponent<Image>();
+       var sprite = Resources.Load<Sprite>( "Props/Pocao/pocao" );
+        if( sprite == null || potion == null )
+            return;
+
+        potion.sprite = sprite;
 
         Transform firstNumChild = transform.GetChild(0);
         if( !transform.name.Contains( MAIN_PATH ) || !firstNumChild.name.Contains( NUM ) )

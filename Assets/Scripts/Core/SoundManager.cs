@@ -11,6 +11,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField]public AudioClip       _background;
     [SerializeField]public AudioClip       _potResult;
     [SerializeField]public AudioClip       _error;
+    [SerializeField]public AudioClip       _bubblingCauldron;
 
     private void Awake()
     {

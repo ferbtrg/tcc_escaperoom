@@ -5,7 +5,7 @@ public class CauldronNumberAnimation : MonoBehaviour
 {
     #region Fields
     [Header("Effects")]
-    public ParticleSystem   _potionSplashEffect;
+    public ParticleSystem   _smoke;
     public ParticleSystem   _magicEffect;
 
     [Header("Floating Number")]
@@ -16,13 +16,15 @@ public class CauldronNumberAnimation : MonoBehaviour
 
     private Image           _firstNumImage;
     private Image           _secNumImage;
+
+    SoundManager _soundManager;
     #endregion
 
     #region Public Methods
     public void OnPotionAdded( int currentNum, int potionValue )
     {
-        if (_potionSplashEffect != null)
-            _potionSplashEffect.Play();
+        if (_smoke != null)
+            _smoke.Play();
 
         if (_magicEffect != null)
             _magicEffect.Play();
@@ -36,11 +38,15 @@ public class CauldronNumberAnimation : MonoBehaviour
     #region Private Methods
     private void Start()
     {
+
         Transform firstNumChild     = transform.GetChild(0);
         Transform secNumChild       = transform.GetChild(1);
         
         _firstNumImage              = firstNumChild.GetComponentInChildren<Image>();
         _secNumImage                = secNumChild.GetComponentInChildren<Image>();
+
+        _soundManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
+        SoundManager._instance.PlaySFX( _soundManager._bubblingCauldron );
     }
 
     private void ShowFloatingNumber( int number )

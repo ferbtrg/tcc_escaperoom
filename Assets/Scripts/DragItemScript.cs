@@ -31,8 +31,8 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     #region Public Methods
     public void OnBeginDrag( PointerEventData eventData ) 
     {
-        _initialPos                     = transform.position;
         _canvasGroup.blocksRaycasts     = false;
+        _initialPos                     = transform.position;
 
         string str = string.Format( "OnBeginDrag - Alpha: {0}, blockRayCasts: {1}", _canvasGroup.alpha, _canvasGroup.blocksRaycasts.ToString() );
         Debug.Log( str );
@@ -46,7 +46,10 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     public void OnEndDrag( PointerEventData eventData )
     {
          if( _canvasGroup.alpha == 0 && transform.position == _initialPos  )
-            _canvasGroup.alpha           = 1f;
+            _canvasGroup.alpha                  = 1f;
+
+         if( _canvasGroup.alpha == 1 && transform.position != _initialPos )
+            transform.position = _initialPos;
 
         _canvasGroup.blocksRaycasts  = true;
 

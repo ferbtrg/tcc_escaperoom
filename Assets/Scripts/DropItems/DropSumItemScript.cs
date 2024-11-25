@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
+using Unity.VisualScripting;
 
 public class DropItemScript : MonoBehaviour, IDropHandler
 {
@@ -16,6 +17,10 @@ public class DropItemScript : MonoBehaviour, IDropHandler
     static GameObject _secPotPrefab;
 
     [SerializeField] private GameObject _flowerGroup;
+    [Header("Sound")]
+    [SerializeField] private AudioClip sound;
+
+    SoundManager _soundManager;
     #endregion
 
     #region Public Methods
@@ -45,17 +50,19 @@ public class DropItemScript : MonoBehaviour, IDropHandler
         var gameObj     = item.gameObject;
 
 
-        if( item.transform.childCount == 0 && parent.childCount < 15 )
+        if( item.transform.childCount == 0 )
         {
             GameObject newFlower                            = Instantiate( gameObj, DragItemScript.InitialPos, item.transform.rotation, parent );
             newFlower.transform.localScale                  = item.transform.localScale;
             newFlower.name                                  = item.transform.name;
             newFlower.GetComponent<CanvasGroup>().blocksRaycasts  = true;
             newFlower.GetComponent<CanvasGroup>().alpha = 1;
-        }
+            }
+
+          SoundManager._instance.PlaySound(sound);
 
           AddFlowersToPot( eventData );
-          ChangePotNumber();
+          ChangePotNumber( eventData );
 
       }//try
       catch( Exception ex )
@@ -67,6 +74,11 @@ public class DropItemScript : MonoBehaviour, IDropHandler
     #endregion
 
     #region Private Methods
+    private void Awake()
+    {
+        _soundManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
+    }
+
     private void AddFlowersToPot( PointerEventData eventData )
     {
          // Instancia o grupo de flores
@@ -157,7 +169,7 @@ public class DropItemScript : MonoBehaviour, IDropHandler
         flowerGroup.ShowFlower(flowerColor);
     }
 
-    private void ChangePotNumber()
+    private void ChangePotNumber( PointerEventData eventData )
     {
         Transform childTest = transform.GetChild(0);
         if( !childTest.name.Contains( "Num" ) || transform.name == "PotResult" )
@@ -169,34 +181,64 @@ public class DropItemScript : MonoBehaviour, IDropHandler
 
         string name     = child.sprite.name;
         int number      = 0;
+        FlowerGroupController flowerGroup;
         if( int.TryParse( name, out number ) )
         { 
             //TODO: Insert error here. Don't forget
             if( number == 9 )
                 return;
 
+            //Add how many flowers were added on the pot.
+            switch( childTest.name )
+            {
+                 case "FirstNum":
+                    flowerGroup = _flowerGroup.GetComponent<FlowerGroupController>();
+                    if( flowerGroup != null )
+                        ResetFlowersOnMaxCount( flowerGroup, ref number, eventData );
+
+                    if( number == -1 )
+                        _firstPot   = 0;
+                     else
+                        ++_firstPot;
+                     break;
+
+                 case "SecNum":
+                    if( _secPotPrefab != null )
+                    { 
+                        flowerGroup = _secPotPrefab.GetComponent<FlowerGroupController>();
+                        if( flowerGroup != null )
+                            ResetFlowersOnMaxCount( flowerGroup, ref number, eventData );
+                    }
+                     if( number == -1 )
+                        _secPot   = 0;
+                     else
+                        ++_secPot;
+                     break;
+
+                 case "ThirdNum":
+                    if( _thirdPotPrefab != null )
+                    { 
+                        flowerGroup = _thirdPotPrefab.GetComponent<FlowerGroupController>();
+                        if( flowerGroup != null )
+                            ResetFlowersOnMaxCount( flowerGroup, ref number, eventData );
+                    }
+                     
+                    if( number == -1 )
+                        _thirdPot = 0;
+                     else
+                        ++_thirdPot;
+
+                     break;
+            }
+
+
+            
             int newNumber = number + 1;
             //Path to numbers img
             var sprite = Resources.Load<Sprite>( "Props/Numeros/" + newNumber.ToString() );
 
             if( sprite == null )
                 return;
-
-            //Add how many flowers were added on the pot.
-            switch( childTest.name )
-            {
-                 case "FirstNum":
-                     ++_firstPot;
-                     break;
-
-                 case "SecNum":
-                     ++_secPot;
-                     break;
-
-                 case "ThirdNum":
-                     ++_thirdPot;
-                     break;
-            }
 
             child.sprite = sprite;
             CheckPotNumbers();
@@ -219,6 +261,18 @@ public class DropItemScript : MonoBehaviour, IDropHandler
         
         // Aplica essa diferença ao grupo de flores
         newFlowerGroupRect.anchoredPosition             += DifBetweenPots;
+    }
+
+    private void ResetFlowersOnMaxCount( FlowerGroupController flowerGroup, ref int number, PointerEventData eventData  )
+    {
+        var item        = eventData.pointerDrag;
+        if( number == 4 )
+        {
+            number = -1;
+            flowerGroup.SetFlowerVisibility();
+            SoundManager._instance.PlaySFX( _soundManager._error );
+            Destroy(item);
+        }
     }
 
     private void CheckPotNumbers()
@@ -244,6 +298,7 @@ public class DropItemScript : MonoBehaviour, IDropHandler
                 if( sprite == null )
                     return;
 
+                SoundManager._instance.PlaySFX(_soundManager._potResult);
                 child.sprite = sprite;
                 break;
             }

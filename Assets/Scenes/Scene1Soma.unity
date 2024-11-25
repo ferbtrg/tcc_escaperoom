@@ -2229,10 +2229,10 @@ AudioSource:
   m_GameObject: {fileID: 1342845796}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: adec5a369f833a840870d689325b96e6, type: 2}
   m_audioClip: {fileID: 8300000, guid: f177d6ba4e365b4438d6ebc8268c0c04, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.536
+  m_Volume: 0.441
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -3246,9 +3246,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _source: {fileID: 1342845797}
   _SFXSource: {fileID: 2087860802}
-  _background: {fileID: 8300000, guid: f177d6ba4e365b4438d6ebc8268c0c04, type: 3}
+  _background: {fileID: 8300000, guid: 594c70d52be77414c8e35843f89cee36, type: 3}
   _potResult: {fileID: 8300000, guid: 7478151cf36724a7dada558f746c3633, type: 3}
   _error: {fileID: 8300000, guid: df729d213c4be44a9b55cd109f5cd4f9, type: 3}
+  _bubblingCauldron: {fileID: 0}
+  _success: {fileID: 0}
+  _pouringWater: {fileID: 0}
+  _firePlace: {fileID: 0}
+  _clockTick: {fileID: 0}
 --- !u!4 &2083231978
 Transform:
   m_ObjectHideFlags: 0

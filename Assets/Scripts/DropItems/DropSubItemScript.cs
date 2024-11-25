@@ -16,6 +16,8 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
     const int                           MIN_NUMBER      = 45;
     const string                        MAIN_PATH       = "Main";
     const string                        NUM             = "Num";
+    SoundManager                        _soundManager;
+    public GameObject                   _starPrefab;
     #endregion
 
     #region Public Methods
@@ -36,6 +38,7 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
             if( item == null )
                 return;
             
+            _soundManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
             HandleItemInteraction( item );
         }//try
         catch( Exception ex )
@@ -56,6 +59,7 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
         if( sprite == null || potion == null )
             return;
 
+        SoundManager._instance.PlaySFX( _soundManager._pouringWater );
         potion.sprite = sprite;
 
         Transform firstNumChild = transform.GetChild(0);
@@ -113,8 +117,22 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
 
         if( result < MIN_NUMBER )
         {
+            SoundManager._instance.PlaySFX( _soundManager._error );
             _lastNum    = MAX_NUMBER.ToString();
             return MAX_NUMBER;
+        }
+        //45
+        else if( result == MIN_NUMBER )
+        {
+            Canvas canvas                   = GetComponentInParent<Canvas>();
+           ItemFallManager.SpawnFallingItem( _starPrefab, transform.position, canvas.transform );
+
+
+
+            var canvasGroup                 = canvas.GetComponent<CanvasGroup>();
+            canvasGroup.interactable        = false; // Desabilita interações
+            canvasGroup.blocksRaycasts      = false; // Bloqueia cliques
+            SoundManager._instance.PlaySFX( _soundManager._success );
         }
 
         return result;

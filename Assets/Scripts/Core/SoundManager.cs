@@ -2,18 +2,31 @@
 
 public class SoundManager : MonoBehaviour
 {
-    public static SoundManager instance { get; private set; }
+    public static SoundManager      _instance { get; private set; }
 
-    private AudioSource source;
+
+
+    [Header("Audio Source")]
+    [SerializeField]AudioSource     _source;
+    [SerializeField]AudioSource     _SFXSource;
+
+    [Header("Audio Clip")]
+    [SerializeField]AudioClip     _background;
 
     private void Awake()
     {
-        instance = this;
-        source = GetComponent<AudioSource>();
+        _instance    = this;
+        _source.clip = _background;
+        _source.Play();
     }
 
-    public void PlaySound(AudioClip sound)
+    public void PlaySound( AudioClip sound )
     {
-        source.PlayOneShot(sound);
+        _source.PlayOneShot(sound);
+    }
+    
+    public void PlaySFX(AudioClip clip)
+    {
+        _SFXSource.PlayOneShot(clip);
     }
 }

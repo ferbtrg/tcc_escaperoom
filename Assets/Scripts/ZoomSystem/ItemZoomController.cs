@@ -90,18 +90,34 @@ public class ItemZoomController : MonoBehaviour
         _originalPosition                           = rectTransform.anchoredPosition;
         rectTransform.anchoredPosition          = Vector2.zero;
         rectTransform.localScale = _originalScale * _itemZoomScale;
-                
-        // Esconde outros elementos UI
-        foreach (var graphic in _parentCanvas.GetComponentsInChildren<Graphic>())
+
+        if( _parentCanvas.name == "CanvasStar" )
         {
-            if (!graphic.transform.IsChildOf(transform) && graphic.gameObject != gameObject)
+            GameObject star = GameObject.Find("Canvas");
+            foreach (var graphic in star.GetComponentsInChildren<Graphic>())
             {
-                Color color = graphic.color;
-                color.a = 0;
-                graphic.color = color;
+                if (!graphic.transform.IsChildOf(transform) && graphic.gameObject != gameObject)
+                {
+                    Color color = graphic.color;
+                    color.a = 0;
+                    graphic.color = color;
+                }
             }
         }
-
+        else
+        { 
+                
+            // Esconde outros elementos UI
+            foreach (var graphic in _parentCanvas.GetComponentsInChildren<Graphic>())
+            {
+                if (!graphic.transform.IsChildOf(transform) && graphic.gameObject != gameObject)
+                {
+                    Color color = graphic.color;
+                    color.a = 0;
+                    graphic.color = color;
+                }
+            }
+        }
         _camera.orthographicSize = _cameraCloseSize;
         
         if (_floatingBooks != null)
@@ -116,17 +132,32 @@ public class ItemZoomController : MonoBehaviour
         rectTransform.anchoredPosition = _originalPosition;
         rectTransform.localScale = _originalScale;
         
-        // Restaura visibilidade dos elementos UI
-        foreach (var graphic in _parentCanvas.GetComponentsInChildren<Graphic>())
+        if( _parentCanvas.name == "CanvasStar" )
         {
-            if (!graphic.transform.IsChildOf(transform) && graphic.gameObject != gameObject)
+            GameObject star = GameObject.Find("Canvas");
+            foreach (var graphic in star.GetComponentsInChildren<Graphic>())
             {
-                Color color = graphic.color;
-                color.a = 1;
-                graphic.color = color;
+                if (!graphic.transform.IsChildOf(transform) && graphic.gameObject != gameObject)
+                {
+                    Color color = graphic.color;
+                    color.a = 1;
+                    graphic.color = color;
+                }
             }
         }
-
+        else
+        {
+            // Restaura visibilidade dos elementos UI
+            foreach (var graphic in _parentCanvas.GetComponentsInChildren<Graphic>())
+            {
+                if (!graphic.transform.IsChildOf(transform) && graphic.gameObject != gameObject)
+                {
+                    Color color = graphic.color;
+                    color.a = 1;
+                    graphic.color = color;
+                }
+            }
+        }
         _camera.orthographicSize = _cameraNormalSize;
         
         if (_floatingBooks != null)

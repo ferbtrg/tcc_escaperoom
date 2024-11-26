@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static Unity.VisualScripting.Metadata;
+using static UnityEditor.Progress;
 public class DropSubItemScript : MonoBehaviour, IDropHandler
 {
     #region Fields
@@ -124,15 +126,23 @@ public class DropSubItemScript : MonoBehaviour, IDropHandler
         //45
         else if( result == MIN_NUMBER )
         {
+          
             Canvas canvas                   = GetComponentInParent<Canvas>();
-           ItemFallManager.SpawnFallingItem( _starPrefab, transform.position, canvas.transform );
-
-
-
             var canvasGroup                 = canvas.GetComponent<CanvasGroup>();
             canvasGroup.interactable        = false; // Desabilita interações
             canvasGroup.blocksRaycasts      = false; // Bloqueia cliques
             SoundManager._instance.PlaySFX( _soundManager._success );
+
+            GameObject star = GameObject.Find("CanvasStar");
+            if( star != null )
+            {
+                var canvasStar              = star.GetComponent<CanvasGroup>();
+                var interactable            = canvasStar.GetComponent<CanvasGroup>().interactable = true;
+                var rayCasts                = canvasStar.GetComponent<CanvasGroup>().blocksRaycasts = true;
+                var alpha                = canvasStar.GetComponent<CanvasGroup>().alpha = 1;
+
+            }
+
         }
 
         return result;

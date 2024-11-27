@@ -15,6 +15,11 @@ TagManager:
   - 99
   - Audio
   - Ground
+  - Blue
+  - Black
+  - Purple
+  - Green
+  - Red
   layers:
   - Default
   - TransparentFX

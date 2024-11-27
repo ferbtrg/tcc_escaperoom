@@ -21,15 +21,15 @@ public class SceneScript : MonoBehaviour
         var children = parent.GetComponentsInChildren<Transform>();
         Transform puzzleCanvas = children.FirstOrDefault(child => child.name == "Canvas");
         
-        if (puzzleCanvas != null)
+        if( puzzleCanvas != null )
         {
             var canvasGroup = puzzleCanvas.GetComponent<CanvasGroup>();
-            if (canvasGroup != null)
+            if( canvasGroup != null )
             { 
                 if( sceneName == "Scene1Soma" )
                     puzzleStatusToSet = true;
-                else
-                    puzzleStatusToSet = !canvasGroup.interactable;
+                else if( canvasGroup.interactable )
+                    puzzleStatusToSet = false;
             }
         }
 
@@ -40,14 +40,14 @@ public class SceneScript : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        var sceneName   = GameObject.Find(scene.name);
-        var children    = sceneName.GetComponentsInChildren<Transform>();
-        var canvas = children.FirstOrDefault(child => child.name == "Canvas");
-        var canvasGroup = canvas.GetComponent<CanvasGroup>();
-        if(canvasGroup != null)
+        var sceneName           = GameObject.Find(scene.name);
+        var children            = sceneName.GetComponentsInChildren<Transform>();
+        var canvas              = children.FirstOrDefault(child => child.name == "Canvas");
+        var canvasGroup         = canvas.GetComponent<CanvasGroup>();
+        if( canvasGroup != null )
         {
-            canvasGroup.interactable = puzzleStatusToSet;
-            canvasGroup.blocksRaycasts = puzzleStatusToSet;
+            canvasGroup.interactable        = puzzleStatusToSet;
+            canvasGroup.blocksRaycasts      = puzzleStatusToSet;
         }
 
         // Remove o evento após configurar a cena

@@ -36,7 +36,9 @@ public class ClockMultiplierChecker : MonoBehaviour
         //Adjusts to scale 1-12
         if( roundedNumber == 0 || roundedNumber > 12 )
             roundedNumber = 12;
-            
+
+        string str      = string.Format("Hour Clock Angle: {0}, Angle: {1}, Hour: {2}", clockAngle, angle, roundedNumber );
+         Debug.Log( str );
         return roundedNumber;
     }
 
@@ -53,6 +55,7 @@ public class ClockMultiplierChecker : MonoBehaviour
         //Rotating counterclockwise
          float clockAngle   = ( 360f - angle ) % 360f;
         
+
         //Converts to minutes (0-60)
         float   number        = ( clockAngle / 6f ); // 6 degrees per minute
         int     minutes         = Mathf.RoundToInt( number );
@@ -61,6 +64,10 @@ public class ClockMultiplierChecker : MonoBehaviour
         if( minutes == 0 || minutes == 60 )
             minutes = 60;
             
+
+        string str      = string.Format(" Minute Clock Angle: {0}, Angle: {1}, Minutes: {2}", clockAngle, angle, minutes );
+        Debug.Log( str );
+
         return minutes;
     }
 

@@ -7,11 +7,8 @@ using UnityEngine.EventSystems;
 public class DropMultItem : MonoBehaviour, IDropHandler
 {
  #region Fields
-    [Header("Shelves")]
-    [SerializeField] private GameObject _mainShelf;
     [Header("Sound")]
     [SerializeField] private AudioClip sound;
-
     SoundManager _soundManager;
     #endregion
 
@@ -29,30 +26,10 @@ public class DropMultItem : MonoBehaviour, IDropHandler
 
           if( eventData.pointerDrag == null )
                 return;
-           
-        //TODO: 
-        //Fazer a lógica de enfiar o livro em cada buraco da estante.
 
-        var item        = eventData.pointerDrag;
-        var parent      = item.transform.parent;
-        var alpha       = item.GetComponent<CanvasGroup>().alpha = 0;
-        var children    = parent.GetComponentsInChildren<Transform>();
-        var gameObj     = item.gameObject;
-
-
-        if( item.transform.childCount == 2 )
-        {
-                GameObject book                                     = Instantiate( gameObj, DragItemScript.InitialPos, item.transform.rotation, parent );
-                book.transform.localScale                           = item.transform.localScale;
-                book.name                                           = item.transform.name;
-                book.GetComponent<CanvasGroup>().blocksRaycasts     = true;
-                book.GetComponent<CanvasGroup>().alpha              = 1;
-        }
-
-          SoundManager._instance.PlaySound(sound);
-          _mainShelf.GetComponent<BookGroupController>();
-
-          AddBooksToShelves( eventData );
+            eventData.pointerDrag.GetComponent<RectTransform>().position = DragItemScript.InitialPos;
+            SoundManager._instance.PlaySound(sound);
+            AddBooksToShelves( eventData );
 
       }//try
       catch( Exception ex )
@@ -69,19 +46,56 @@ public class DropMultItem : MonoBehaviour, IDropHandler
         _soundManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
     }
 
+    private void CloneBookAtInitialPosition( PointerEventData eventData )
+    {
+        var item        = eventData.pointerDrag;
+        var parent      = item.transform.parent;
+        var alpha       = item.GetComponent<CanvasGroup>().alpha = 0;
+        var children    = parent.GetComponentsInChildren<Transform>();
+        var gameObj     = item.gameObject;
+
+
+        if( item.transform.childCount == 2 )
+        {
+                GameObject book                                     = Instantiate( gameObj, DragItemScript.InitialPos, item.transform.rotation, parent );
+                book.transform.localScale                           = item.transform.localScale;
+                book.name                                           = item.transform.name;
+                book.GetComponent<CanvasGroup>().blocksRaycasts     = true;
+                book.GetComponent<CanvasGroup>().alpha              = 1;
+        }
+
+    }
+
     private void AddBooksToShelves( PointerEventData eventData )
     {
          //Fazer a lógica pra ver se o eventDat.pointerDrag tem o nome que o transform.name, se tiver coloca o livro lá.
         GameObject      item                = eventData.pointerDrag;
-        string          shelfName           = transform.name;
-        BookGroupController book            = _mainShelf.GetComponent<BookGroupController>();
-        
+        string          shelfName           = transform.tag;
+        BookGroupController book            = GetComponent<BookGroupController>();
         // Identifica a cor da flor que foi dropada
         string bookColor                       = eventData.pointerDrag.tag;
-        _mainShelf.GetComponent<BookGroupController>();
 
-        // Mostra a flor correspondente no grupo
-        book.ShowBook( bookColor );
+
+        if( shelfName != null &&  bookColor != null && shelfName == bookColor )
+        {
+            ShowBookAccordingToColor( bookColor );
+            SoundManager._instance.PlaySFX( _soundManager._success );
+        }
+        else
+            SoundManager._instance.PlaySFX( _soundManager._error );
+    }
+
+    private void ShowBookAccordingToColor( string color )
+    {
+
+        var book = transform.GetChild( 0 );
+        if( book == null || !book.name.Contains(color)  )
+            return;
+
+
+        Debug.Log($"Tentando mostrar flor da cor: {color}");
+
+        book.gameObject.SetActive( true );
     }
     #endregion
 }

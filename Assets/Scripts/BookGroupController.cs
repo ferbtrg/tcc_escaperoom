@@ -23,12 +23,4 @@ public class BookGroupController : MonoBehaviour
         _fourthBook.SetActive( false );
         _fifthBook.SetActive( false );
     }
-
-    public void ShowBook(string color)
-    {
-        Debug.Log($"Tentando mostrar flor da cor: {color}");
-
-        GameObject obj = GameObject.FindWithTag( color );
-        obj.SetActive( true );
-    }
 }

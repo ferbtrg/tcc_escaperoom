@@ -28,7 +28,7 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     {
         _rectTransform          = GetComponent<RectTransform>();
         _canvasGroup            = GetComponent<CanvasGroup>();
-        _floatingEffect = GetComponent<FloatingEffectController>();
+        _floatingEffect         = GetComponent<FloatingEffectController>();
     }
 
     #region Public Methods

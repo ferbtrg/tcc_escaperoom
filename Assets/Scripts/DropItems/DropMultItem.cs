@@ -4,17 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DropMultItem : MonoBehaviour
+public class DropMultItem : MonoBehaviour, IDropHandler
 {
  #region Fields
     [Header("Shelves")]
     [SerializeField] private GameObject _mainShelf;
-   // [SerializeField] private GameObject _firstShelf;
-   // [SerializeField] private GameObject _secShelf;
-   // [SerializeField] private GameObject _thirdShelf;
-   // [SerializeField] private GameObject _fourthShelf;
-   // [SerializeField] private GameObject _fifthShelf;
-
     [Header("Sound")]
     [SerializeField] private AudioClip sound;
 
@@ -31,12 +25,10 @@ public class DropMultItem : MonoBehaviour
       try
       {
 
-            Debug.Log("OnDrop");
+          Debug.Log("OnDrop");
 
           if( eventData.pointerDrag == null )
                 return;
-
-        eventData.pointerDrag.GetComponent<RectTransform>().position = DragItemScript.InitialPos;
            
         //TODO: 
         //Fazer a lógica de enfiar o livro em cada buraco da estante.
@@ -50,11 +42,11 @@ public class DropMultItem : MonoBehaviour
 
         if( item.transform.childCount == 2 )
         {
-                GameObject book                            = Instantiate( gameObj, DragItemScript.InitialPos, item.transform.rotation, parent );
-                book.transform.localScale                  = item.transform.localScale;
-                book.name                                  = item.transform.name;
-                book.GetComponent<CanvasGroup>().blocksRaycasts  = true;
-                book.GetComponent<CanvasGroup>().alpha = 1;
+                GameObject book                                     = Instantiate( gameObj, DragItemScript.InitialPos, item.transform.rotation, parent );
+                book.transform.localScale                           = item.transform.localScale;
+                book.name                                           = item.transform.name;
+                book.GetComponent<CanvasGroup>().blocksRaycasts     = true;
+                book.GetComponent<CanvasGroup>().alpha              = 1;
         }
 
           SoundManager._instance.PlaySound(sound);
@@ -79,10 +71,10 @@ public class DropMultItem : MonoBehaviour
 
     private void AddBooksToShelves( PointerEventData eventData )
     {
-         // Instancia o grupo de flores
-        GameObject      flower              = eventData.pointerDrag;
+         //Fazer a lógica pra ver se o eventDat.pointerDrag tem o nome que o transform.name, se tiver coloca o livro lá.
+        GameObject      item                = eventData.pointerDrag;
         string          shelfName           = transform.name;
-        BookGroupController book            = new BookGroupController();
+        BookGroupController book            = _mainShelf.GetComponent<BookGroupController>();
         
         // Identifica a cor da flor que foi dropada
         string bookColor                       = eventData.pointerDrag.tag;
@@ -90,19 +82,6 @@ public class DropMultItem : MonoBehaviour
 
         // Mostra a flor correspondente no grupo
         book.ShowBook( bookColor );
-    }
-
-
-    private void ResetFlowersOnMaxCount( FlowerGroupController flowerGroup, ref int number, PointerEventData eventData  )
-    {
-        var item        = eventData.pointerDrag;
-        if( number == 4 )
-        {
-            number = -1;
-            flowerGroup.SetFlowerVisibility();
-            SoundManager._instance.PlaySFX( _soundManager._error );
-            Destroy(item);
-        }
     }
     #endregion
 }

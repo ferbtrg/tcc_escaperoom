@@ -13,6 +13,8 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     private RectTransform       _rectTransform;
     private CanvasGroup         _canvasGroup;
     public static Vector3       _initialPos;
+
+    private FloatingEffectController _floatingEffect;
     #endregion
 
     #region Properties
@@ -26,6 +28,7 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     {
         _rectTransform          = GetComponent<RectTransform>();
         _canvasGroup            = GetComponent<CanvasGroup>();
+        _floatingEffect = GetComponent<FloatingEffectController>();
     }
 
     #region Public Methods
@@ -33,6 +36,9 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
     {
         _canvasGroup.blocksRaycasts     = false;
         _initialPos                     = transform.position;
+
+        if( _floatingEffect != null )
+            _floatingEffect.SetDragging( true );
 
         string str = string.Format( "OnBeginDrag - Alpha: {0}, blockRayCasts: {1}", _canvasGroup.alpha, _canvasGroup.blocksRaycasts.ToString() );
         Debug.Log( str );
@@ -45,6 +51,9 @@ public class DragItemScript : MonoBehaviour, IPointerDownHandler, IBeginDragHand
 
     public void OnEndDrag( PointerEventData eventData )
     {
+          if( _floatingEffect != null )
+            _floatingEffect.SetDragging( false );
+
          if( _canvasGroup.alpha == 0 && transform.position == _initialPos  )
             _canvasGroup.alpha                  = 1f;
 

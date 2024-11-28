@@ -4061,8 +4061,8 @@ Transform:
   m_GameObject: {fileID: 676118325}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0558, y: 0.0117, z: 10}
-  m_LocalScale: {x: 1.083069, y: 0.9398525, z: 0}
+  m_LocalPosition: {x: 0.019, y: 0.0117, z: 10}
+  m_LocalScale: {x: 1.0868597, y: 0.9398525, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 288949937}
@@ -5306,6 +5306,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c3b3dec39f117c4eb3882a66762defd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstBook: {fileID: 423016079}
+  _secBook: {fileID: 1008697647}
+  _thirdBook: {fileID: 1700550723}
+  _fourthBook: {fileID: 1397738104}
+  _fifthBook: {fileID: 1865363965}
 --- !u!1 &1008697647
 GameObject:
   m_ObjectHideFlags: 0
@@ -17336,6 +17341,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c3b3dec39f117c4eb3882a66762defd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstBook: {fileID: 579002774}
+  _secBook: {fileID: 1724984513}
+  _thirdBook: {fileID: 290428634}
+  _fourthBook: {fileID: 423073181}
+  _fifthBook: {fileID: 1925052308}
 --- !u!1 &1591734777
 GameObject:
   m_ObjectHideFlags: 0
@@ -18921,6 +18931,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c3b3dec39f117c4eb3882a66762defd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstBook: {fileID: 135048149}
+  _secBook: {fileID: 394061301}
+  _thirdBook: {fileID: 478916199}
+  _fourthBook: {fileID: 224506825}
+  _fifthBook: {fileID: 550127789}
 --- !u!1 &1897640094
 GameObject:
   m_ObjectHideFlags: 0

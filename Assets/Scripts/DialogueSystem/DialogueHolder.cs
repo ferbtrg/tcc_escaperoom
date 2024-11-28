@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.Drawing;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace DialogueSystem
 {
@@ -7,25 +9,51 @@ namespace DialogueSystem
     {
         private void Awake()
         {
-            StartCoroutine(dialogueSequence());
+            StartCoroutine(DialogueSequence());
         }
 
-        private IEnumerator dialogueSequence()
+        private IEnumerator DialogueSequence()
         {
-            for (int i = 0; i < transform.childCount; i++)
+            int totalDialogues = transform.childCount;
+            bool finalLine = false;
+            for( int i = 0; i < totalDialogues; i++ )
             {
-                Deactivate();
-                transform.GetChild(i).gameObject.SetActive(true);
-                yield return new WaitUntil(() => transform.GetChild(i).GetComponent<DialogueLine>().finished);
+                GameObject currentChild = transform.GetChild(i).gameObject;
+                if( currentChild.GetComponent<UnityEngine.UI.Image>() != null )
+                    continue;
+                
+                DeactivateDialogueLines();
+                currentChild.SetActive(true);
+                
+                DialogueLine dialogueLine = currentChild.GetComponent<DialogueLine>();
+
+                if( dialogueLine != null )
+                {
+                    finalLine = dialogueLine.ToString() == "FIM!";
+                    yield return new WaitUntil(() => dialogueLine.Finished);
+                    if( i == totalDialogues - 1 && !finalLine )
+                    {
+                        SceneManager.LoadScene("Scene1Soma");
+                        yield break;
+                    }
+                }
             }
-            gameObject.SetActive(false);
+            
+
+            if( !finalLine )
+                gameObject.SetActive(false);
+
+            
         }
 
-        private void Deactivate()
+        private void DeactivateDialogueLines()
         {
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                transform.GetChild(i).gameObject.SetActive(false);
+            for( int i = 0; i < transform.childCount; i++ )
+            { 
+                //Deactivate only DialogueLine objects, not images
+                GameObject child = transform.GetChild(i).gameObject;
+                if( child.GetComponent<DialogueLine>() != null )
+                    child.SetActive(false);
             }
         }
     }

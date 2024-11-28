@@ -23,7 +23,6 @@ public class SoundManager : MonoBehaviour
         _source.clip = _background;
         _source.Play();
 
-
     }
 
     public void PlaySound( AudioClip sound )

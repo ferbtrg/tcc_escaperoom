@@ -12,7 +12,7 @@ public class SceneScript : MonoBehaviour
     
     public void LoadScene(string sceneName)
     {
-        if (string.IsNullOrEmpty(sceneName))
+        if( string.IsNullOrEmpty(sceneName) )
             return;
 
         _sceneName = sceneName;

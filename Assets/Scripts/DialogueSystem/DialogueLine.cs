@@ -20,17 +20,10 @@ namespace DialogueSystem
         [Header("Sound")]
         [SerializeField] private AudioClip sound;
 
-        [Header("Character Image")]
-        [SerializeField] private Sprite characterSprite;
-        [SerializeField] private Image imageHolder;
-
         private void Awake()
         {
             textHolder = GetComponent<Text>();
             textHolder.text = "";
-
-            imageHolder.sprite = characterSprite;
-            imageHolder.preserveAspect = true;
         }
 
         private void Start()
